@@ -152,6 +152,46 @@ The analyzer calculates and monitors:
 - `POST /api/upload-embeddings` - Upload embedding files
 - `POST /api/download-cleaned` - Download cleaned embeddings
 
+## 🧪 Testing & Validation
+
+The system includes comprehensive testing to ensure **every data is valid** (no NaN/Inf values) and **all API responses succeed**.
+
+### Quick Test - Run All Tests
+
+```bash
+python run_all_tests.py
+```
+
+This master test runner executes all test suites and provides a summary.
+
+### Individual Test Suites
+
+```bash
+# Core functionality tests
+python test_core.py
+
+# API endpoint tests
+python test_api.py
+
+# Fix validation tests
+python test_fixes.py
+
+# Comprehensive data validation
+python test_data_validation.py
+```
+
+### Data Validation
+
+The `test_data_validation.py` script ensures:
+- ✅ No NaN or Inf values in any data
+- ✅ All API endpoints return `success: true`
+- ✅ Generated embeddings are valid
+- ✅ Metrics calculations are accurate
+- ✅ Denoising produces valid results
+- ✅ Demo files are intact
+
+See [DATA_VALIDATION.md](DATA_VALIDATION.md) for detailed documentation.
+
 ## 🐛 Troubleshooting
 
 ### Backend won't start
