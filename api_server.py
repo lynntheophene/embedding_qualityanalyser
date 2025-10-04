@@ -123,9 +123,13 @@ def denoise_embeddings():
         else:
             embeddings, _ = analyzer._generate_sample_data()
         
+        # First get metrics and analysis for the embeddings
+        metrics = analyzer.calculate_quality_metrics(embeddings)
+        analysis = analyzer.analyze_with_gemini(metrics)
+        
         # Apply denoising using your analyzer
         print("🧹 Applying Gemini-recommended denoising...")
-        cleaned_embeddings = analyzer.denoise_embeddings(embeddings)
+        cleaned_embeddings = analyzer.denoise_embeddings(embeddings, analysis)
         
         # Calculate metrics for cleaned data
         cleaned_metrics = analyzer.calculate_quality_metrics(cleaned_embeddings)

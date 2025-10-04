@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Embedding Quality Analyzer - Demo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .feature p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            line-height: 40px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .step h3 {
+            color: #333;
+            margin: 0.5rem 0;
+        }
+
+        .step p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Neural Embedding Quality Analyzer</h1>
+            <p>AI-Powered Analysis with Google Gemini</p>
+        </div>
+
+        <div class="card">
+            <h2>🎉 System Status</h2>
+            <div style="margin: 1rem 0;">
+                <span class="status success">✅ Backend Ready</span>
+                <span class="status success">✅ Frontend Ready</span>
+                <span class="status success">✅ Gemini AI Configured</span>
+            </div>
+            <p style="color: #666; margin-top: 1rem;">
+                All components are installed and configured. Your Neural Embedding Quality Analyzer is ready to use!
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>🚀 Quick Start</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Install</h3>
+                    <p>Install dependencies with pip and npm</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Configure</h3>
+                    <p>Set your Gemini API key in .env</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Start</h3>
+                    <p>Run backend and frontend servers</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Analyze</h3>
+                    <p>Process your neural embeddings!</p>
+                </div>
+            </div>
+
+            <div class="code-block">
+# Backend (Terminal 1)
+python api_server.py
+
+# Frontend (Terminal 2)
+cd demo/embedding-analyzer && npm start
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>✨ Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3>🤖 AI-Powered Analysis</h3>
+                    <p>Google Gemini integration for intelligent embedding quality assessment with actionable recommendations.</p>
+                </div>
+                <div class="feature">
+                    <h3>📊 Interactive Visualization</h3>
+                    <p>Real-time scatter plots and comprehensive quality metrics dashboard with before/after comparisons.</p>
+                </div>
+                <div class="feature">
+                    <h3>🧹 Smart Denoising</h3>
+                    <p>Automated embedding cleanup based on AI recommendations using advanced algorithms.</p>
+                </div>
+                <div class="feature">
+                    <h3>📈 Quality Metrics</h3>
+                    <p>Separability, SNR, coherence, outlier detection, and noise level analysis.</p>
+                </div>
+                <div class="feature">
+                    <h3>🎨 Modern UI</h3>
+                    <p>Clean, responsive React interface with multi-step workflow for optimal user experience.</p>
+                </div>
+                <div class="feature">
+                    <h3>⚡ Fast & Free</h3>
+                    <p>Uses Google Gemini's free API tier with generous rate limits for development.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Sample Metrics</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-value">0.85</div>
+                    <div class="metric-label">Separability</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">0.23</div>
+                    <div class="metric-label">Noise Level</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">0.72</div>
+                    <div class="metric-label">Coherence</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">8.5%</div>
+                    <div class="metric-label">Outliers</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">12.3</div>
+                    <div class="metric-label">SNR (dB)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🎯 Workflow</h2>
+            <p style="color: #666; margin-bottom: 1rem;">
+                Follow this simple workflow to analyze and improve your neural embeddings:
+            </p>
+            <ol style="color: #333; line-height: 2; margin-left: 2rem;">
+                <li><strong>Upload:</strong> Generate sample data or upload your neural embeddings (.npy, .csv, .json)</li>
+                <li><strong>Visualize:</strong> View interactive scatter plots and initial quality metrics</li>
+                <li><strong>Analyze:</strong> Get AI-powered quality assessment from Gemini with specific recommendations</li>
+                <li><strong>Clean:</strong> Apply intelligent denoising based on AI suggestions and see improvements</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>📚 Documentation</h2>
+            <p style="color: #666; margin-bottom: 1rem;">
+                Comprehensive guides to help you get started:
+            </p>
+            <ul style="color: #333; line-height: 2; margin-left: 2rem;">
+                <li><strong>README.md</strong> - Project overview and quick start</li>
+                <li><strong>SETUP.md</strong> - Detailed setup guide with troubleshooting</li>
+                <li><strong>validate.py</strong> - System validation script</li>
+                <li><strong>test_core.py</strong> - Core functionality tests</li>
+            </ul>
+            <a href="https://github.com/lynntheophene/embedding_qualityanalyser" class="button">View on GitHub</a>
+        </div>
+
+        <div style="text-align: center; color: white; margin-top: 3rem; opacity: 0.9;">
+            <p>Made with ❤️ for the BCI community</p>
+            <p style="margin-top: 0.5rem;">Powered by Google Gemini AI</p>
+        </div>
+    </div>
+</body>
+</html>
