@@ -1,0 +1,248 @@
+# requirements.txt
+# EEG-to-Speech Pipeline Dependencies
+
+# Core processing
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Anthropic Claude API
+anthropic>=0.18.0
+
+# Optional: for real EEG data handling
+# mne>=1.5.0
+
+# Optional: for advanced visualization
+# matplotlib>=3.7.0
+# seaborn>=0.12.0
+
+# Optional: for web API (if building REST endpoint)
+# fastapi>=0.104.0
+# uvicorn>=0.24.0
+
+---
+
+# setup.py
+from setuptools import setup, find_packages
+
+setup(
+    name="eeg-to-speech",
+    version="1.0.0",
+    description="Intelligent EEG preprocessing pipeline powered by Claude Sonnet 4.5",
+    author="Your Name",
+    author_email="your.email@example.com",
+    url="https://github.com/yourusername/eeg-to-speech",
+    packages=find_packages(),
+    install_requires=[
+        "numpy>=1.24.0",
+        "scipy>=1.10.0",
+        "anthropic>=0.18.0",
+    ],
+    extras_require={
+        "dev": ["pytest>=7.0.0", "black>=23.0.0", "flake8>=6.0.0"],
+        "eeg": ["mne>=1.5.0"],
+        "viz": ["matplotlib>=3.7.0", "seaborn>=0.12.0"],
+    },
+    python_requires=">=3.8",
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Healthcare Industry",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    ],
+)
+
+---
+
+# .env.example
+# Copy this to .env and add your actual API key
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# Optional: adjust sampling rate if needed
+EEG_SAMPLING_RATE=250
+
+# Optional: specify number of channels
+EEG_NUM_CHANNELS=8
+
+---
+
+# config.py
+"""
+Configuration file for EEG-to-Speech pipeline
+"""
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# API Configuration
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+CLAUDE_MODEL = "claude-sonnet-4-5-20250929"
+
+# EEG Configuration
+SAMPLING_RATE = int(os.getenv("EEG_SAMPLING_RATE", 250))  # Hz
+NUM_CHANNELS = int(os.getenv("EEG_NUM_CHANNELS", 8))
+CHANNEL_NAMES = ['Fp1', 'Fp2', 'F3', 'F4', 'C3', 'C4', 'P3', 'P4']
+
+# Preprocessing Parameters
+LOWCUT_FREQ = 0.5   # Hz
+HIGHCUT_FREQ = 45.0 # Hz
+ARTIFACT_THRESHOLD_MULTIPLIER = 5  # times std deviation
+
+# Feature Extraction
+FEATURE_BANDS = {
+    'delta': (0.5, 4),
+    'theta': (4, 8),
+    'alpha': (8, 13),
+    'beta': (13, 30),
+    'gamma': (30, 45)
+}
+
+---
+
+# QUICKSTART.md
+# Quick Start Guide
+
+## 🚀 Get Running in 5 Minutes
+
+### Step 1: Clone & Install
+```bash
+git clone https://github.com/yourusername/eeg-to-speech.git
+cd eeg-to-speech
+pip install -r requirements.txt
+```
+
+### Step 2: Set Up API Key
+```bash
+# Copy the example env file
+cp .env.example .env
+
+# Edit .env and add your Anthropic API key
+# Get your key from: https://console.anthropic.com/
+nano .env  # or use your favorite editor
+```
+
+### Step 3: Run the Demo
+```bash
+python eeg_preprocessing.py
+```
+
+You should see output like:
+```
+🧠 EEG-to-Speech Preprocessing Pipeline
+==================================================
+
+[1/5] Loading EEG data...
+✓ Loaded 8 channels, 2500 samples
+
+[2/5] Detecting artifacts with Claude AI...
+✓ Claude Analysis: {'has_artifact': True, 'artifact_type': 'eye_blink', ...}
+
+[3/5] Removing artifacts...
+✓ Artifacts removed (avg reduction: 12.34 µV)
+
+[4/5] Applying bandpass filter (0.5-45 Hz)...
+✓ Frequency filtering complete
+
+[5/5] Extracting features...
+✓ Extracted 104 features
+
+[QUALITY CHECK] Assessing with Claude AI...
+✓ Quality Score: 92/100
+✓ SNR Estimate: 15.3 dB
+✓ Status: ready
+
+==================================================
+✨ Pipeline complete! Signal ready for speech decoding.
+```
+
+### Step 4: Try with Your Own Data
+```python
+from eeg_preprocessing import EEGPreprocessor
+
+# Load your EEG file (.edf, .fif, .csv, etc.)
+preprocessor = EEGPreprocessor(api_key="your-key")
+results = preprocessor.run_pipeline(filepath="path/to/your/eeg.edf")
+
+# Access the results
+print(f"Quality Score: {results['quality_report']['quality_score']}/100")
+print(f"Features extracted: {len(results['features'])}")
+```
+
+### Step 5: View Interactive Demo
+```bash
+cd demo
+npm install
+npm start
+# Opens browser at localhost:3000
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### "No module named 'anthropic'"
+```bash
+pip install anthropic
+```
+
+### "API key not found"
+Make sure you:
+1. Created `.env` file from `.env.example`
+2. Added your actual API key (starts with `sk-ant-`)
+3. Are in the correct directory
+
+### "Rate limit exceeded"
+Claude API has rate limits. Wait a moment and try again, or check your usage at console.anthropic.com
+
+### Running on Windows
+Use `python` instead of `python3`:
+```bash
+python eeg_preprocessing.py
+```
+
+---
+
+## 📊 Understanding the Output
+
+### Quality Score (0-100)
+- **90-100**: Excellent quality, ideal for decoding
+- **75-89**: Good quality, suitable for most uses
+- **60-74**: Acceptable with some limitations
+- **<60**: Needs improvement, review recommendations
+
+### SNR (Signal-to-Noise Ratio)
+- **>15 dB**: Excellent
+- **10-15 dB**: Good
+- **5-10 dB**: Fair
+- **<5 dB**: Poor, needs reprocessing
+
+### Readiness Status
+- **ready**: Can proceed to speech decoding
+- **needs_improvement**: Follow Claude's recommendations
+- **insufficient**: Requires new recording or better preprocessing
+
+---
+
+## 🎓 Next Steps
+
+1. **Explore the code**: Read through `eeg_preprocessing.py` to understand each stage
+2. **Modify parameters**: Adjust filtering frequencies, feature bands, etc. in `config.py`
+3. **Use real data**: Try with actual EEG recordings (MNE-compatible formats)
+4. **Build the decoder**: Use extracted features to train a speech classification model
+5. **Contribute**: Submit improvements via pull requests!
+
+---
+
+## 💬 Need Help?
+
+- 📖 Check the [full README](README.md)
+- 🎥 Watch the [demo video](link)
+- 💻 Review [code examples](examples/)
+- 🐛 Open an [issue](https://github.com/yourusername/eeg-to-speech/issues)
+- 📧 Email: your.email@example.com
+
+Happy building! 🚀
