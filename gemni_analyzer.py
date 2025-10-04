@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 
 # Install: pip install google-generativeai
 import google.generativeai as genai
+from google.generativeai.types import RequestOptions
 
 class NeuralEmbeddingAnalyzer:
     """
@@ -24,8 +25,15 @@ class NeuralEmbeddingAnalyzer:
     
     def __init__(self, api_key):
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-1.5-flash-latest')  # Updated model name
+        self.model = genai.GenerativeModel(
+            'gemini-1.5-flash-latest',
+            generation_config={
+                'temperature': 0.3,
+                'max_output_tokens': 2048,
+            }
+        )
         self.scaler = RobustScaler()
+        self.api_timeout = 10  # seconds
         
     def load_embeddings(self, filepath=None, format='npy'):
         """
@@ -187,8 +195,13 @@ Provide analysis in this JSON format (respond ONLY with valid JSON):
     "next_steps": ["step1", "step2"]
 }}"""
 
+        analysis = None
         try:
-            response = self.model.generate_content(prompt)
+            # Try to call Gemini API with timeout
+            response = self.model.generate_content(
+                prompt,
+                request_options=RequestOptions(timeout=self.api_timeout)
+            )
             response_text = response.text
             
             # Extract JSON from response
@@ -197,46 +210,76 @@ Provide analysis in this JSON format (respond ONLY with valid JSON):
             
             if start_idx != -1 and end_idx > start_idx:
                 analysis = json.loads(response_text[start_idx:end_idx])
+                return analysis
             else:
                 raise ValueError("No JSON found in response")
                 
         except Exception as e:
-            print(f"⚠️  Gemini API error: {e}")
-            print("    Using fallback analysis...")
+            error_type = type(e).__name__
+            error_msg = str(e)[:100]
+            print(f"⚠️  Gemini API error ({error_type}): {error_msg}")
+            print("    Using fallback quality analysis...")
+        
+        # Fallback analysis (used when Gemini API fails)
+        if metrics['separability'] < 0.6:
+            quality = "poor"
+            score = 55
+        elif metrics['separability'] < 0.75:
+            quality = "fair"
+            score = 70
+        else:
+            quality = "good"
+            score = 85
+        
+        # Generate appropriate recommendations based on metrics
+        issues = []
+        recommendations = []
+        
+        if metrics['separability'] < 0.75:
+            issues.append(f"Separability is {metrics['separability']:.2f} (target: >0.75)")
+            recommendations.append({
+                "issue": "Low embedding separability",
+                "solution": "Apply outlier removal and robust scaling",
+                "expected_improvement": "+10-15% separability",
+                "priority": "high"
+            })
+        
+        if metrics['outlier_ratio'] > 0.1:
+            issues.append(f"Outlier ratio is {metrics['outlier_ratio']*100:.1f}% (target: <10%)")
+            recommendations.append({
+                "issue": "High outlier ratio detected",
+                "solution": "Apply IQR-based outlier removal with threshold 1.5",
+                "expected_improvement": "+15-20% separability",
+                "priority": "high"
+            })
+        
+        if metrics['noise_level'] > 0.3:
+            issues.append(f"Noise level is {metrics['noise_level']:.2f} (target: <0.3)")
+            recommendations.append({
+                "issue": "High noise level in embeddings",
+                "solution": "Apply PCA denoising and variance reduction",
+                "expected_improvement": "+5-10% SNR",
+                "priority": "medium"
+            })
             
-            # Fallback analysis
-            if metrics['separability'] < 0.6:
-                quality = "poor"
-                score = 55
-            elif metrics['separability'] < 0.75:
-                quality = "fair"
-                score = 70
-            else:
-                quality = "good"
-                score = 85
-                
-            analysis = {
-                "overall_quality": quality,
-                "quality_score": score,
-                "critical_issues": [
-                    f"Separability is {metrics['separability']:.2f} (target: >0.75)",
-                    f"Outlier ratio is {metrics['outlier_ratio']*100:.1f}% (target: <10%)"
-                ],
-                "recommendations": [
-                    {
-                        "issue": "High outlier ratio detected",
-                        "solution": "Apply IQR-based outlier removal with threshold 1.5",
-                        "expected_improvement": "+15-20% separability",
-                        "priority": "high"
-                    }
-                ],
-                "performance_prediction": {
-                    "current_accuracy_estimate": "65-70%",
-                    "post_cleaning_estimate": "78-85%",
-                    "confidence": "medium"
-                },
-                "next_steps": ["Remove outliers", "Apply robust scaling", "Re-evaluate metrics"]
-            }
+        analysis = {
+            "overall_quality": quality,
+            "quality_score": score,
+            "critical_issues": issues if issues else ["No critical issues detected"],
+            "recommendations": recommendations if recommendations else [{
+                "issue": "Quality looks acceptable",
+                "solution": "Minor cleanup recommended",
+                "expected_improvement": "+5% performance",
+                "priority": "low"
+            }],
+            "performance_prediction": {
+                "current_accuracy_estimate": f"{score-10}-{score}%",
+                "post_cleaning_estimate": f"{min(score+10, 90)}-{min(score+20, 95)}%",
+                "confidence": "medium"
+            },
+            "next_steps": ["Remove outliers", "Apply robust scaling", "Re-evaluate metrics"],
+            "note": "Fallback analysis used (Gemini API unavailable)"
+        }
         
         return analysis
     
