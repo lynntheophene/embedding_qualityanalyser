@@ -156,7 +156,15 @@ The analyzer calculates and monitors:
 
 The system includes comprehensive testing to ensure **every data is valid** (no NaN/Inf values) and **all API responses succeed**.
 
-### Run All Tests
+### Quick Test - Run All Tests
+
+```bash
+python run_all_tests.py
+```
+
+This master test runner executes all test suites and provides a summary.
+
+### Individual Test Suites
 
 ```bash
 # Core functionality tests

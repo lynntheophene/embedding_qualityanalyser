@@ -117,7 +117,19 @@ Error responses include:
 
 ## Running All Tests
 
-To verify everything works:
+### Quick Test (Master Runner)
+
+Run all tests at once:
+
+```bash
+python run_all_tests.py
+```
+
+This runs all test suites and provides a summary.
+
+### Individual Tests
+
+To verify specific functionality:
 
 ```bash
 # Core tests
