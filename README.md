@@ -42,62 +42,35 @@ A complete AI-powered system for analyzing and improving neural embedding qualit
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.8 or higher
-- Node.js 14 or higher
-- Google Gemini API key (free at [Google AI Studio](https://makersuite.google.com/app/apikey))
+- Python 3.8+ and Node.js 14+
+- Google Gemini API key ([Get it FREE here](https://makersuite.google.com/app/apikey))
 
-### 1. Clone the Repository
+### Installation (5 minutes)
+
 ```bash
+# 1. Clone the repository
 git clone https://github.com/lynntheophene/embedding_qualityanalyser.git
 cd embedding_qualityanalyser
-```
 
-### 2. Set Up Backend
-
-#### Install Python Dependencies
-```bash
+# 2. Install backend dependencies
 pip install -r req.txt
-```
 
-#### Configure API Key
-```bash
-# Copy the example environment file
+# 3. Configure API key
 cp .env.example .env
+# Edit .env and add your GEMINI_API_KEY
 
-# Edit .env and add your Gemini API key
-nano .env  # or use your favorite editor
-```
-
-Your `.env` file should look like:
-```env
-GEMINI_API_KEY=your_actual_gemini_api_key_here
-```
-
-#### Start the Backend Server
-```bash
+# 4. Start backend (Terminal 1)
 python api_server.py
-```
 
-The backend will start on `http://localhost:5000`
-
-### 3. Set Up Frontend
-
-#### Navigate to Frontend Directory
-```bash
+# 5. Start frontend (Terminal 2)
 cd demo/embedding-analyzer
-```
-
-#### Install Dependencies
-```bash
 npm install
-```
-
-#### Start the Frontend
-```bash
 npm start
 ```
 
-The frontend will automatically open in your browser at `http://localhost:3000`
+**🎉 Done!** Open `http://localhost:3000` in your browser.
+
+**📖 Detailed Instructions**: See [SETUP.md](SETUP.md) for step-by-step setup guide with troubleshooting.
 
 ## 📖 Usage
 
