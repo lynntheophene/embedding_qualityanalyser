@@ -10,11 +10,13 @@ A complete AI-powered system for analyzing and improving neural embedding qualit
 ## 🎯 Features
 
 - 🤖 **AI-Powered Analysis**: Google Gemini integration for intelligent embedding quality assessment
+- 🔄 **Fallback Mode**: Works offline with smart metric-based analysis when Gemini API is unavailable
 - 📊 **Interactive Visualization**: Real-time scatter plots and quality metrics dashboard
 - 🧹 **Smart Denoising**: Automated embedding cleanup based on AI recommendations
 - 📈 **Quality Metrics**: Comprehensive analysis including separability, SNR, coherence, and outlier detection
 - 🎨 **Modern UI**: Clean, responsive React interface with multi-step workflow
-- ⚡ **Fast & Free**: Uses Google Gemini's free API tier
+- ⚡ **Fast & Free**: Uses Google Gemini's free API tier with 10-second timeout for reliability
+- 💾 **Demo Data Included**: Pre-generated sample embeddings for instant testing
 
 ## 🏗️ System Architecture
 
@@ -80,6 +82,23 @@ npm start
 2. **Visualize**: View interactive scatter plots and initial quality metrics
 3. **Analyze**: Click "Analyze with Gemini AI" to get AI-powered quality assessment
 4. **Clean**: Apply denoising based on Gemini's recommendations
+
+**Note**: The system works even without a Gemini API key by using intelligent fallback analysis based on quality metrics!
+
+### Demo Data Files
+
+The repository includes pre-generated demo data for testing:
+
+- `demo_embeddings.npy` - 200 sample neural embeddings (200×128)
+- `demo_labels.npy` - Corresponding class labels
+- `cleaned_embeddings.npy` - Example of cleaned embeddings after denoising
+
+Load demo data in Python:
+```python
+import numpy as np
+embeddings = np.load('demo_embeddings.npy')
+labels = np.load('demo_labels.npy')
+```
 
 ### Command Line Usage
 

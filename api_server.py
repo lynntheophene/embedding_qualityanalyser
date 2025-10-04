@@ -23,8 +23,9 @@ CORS(app)  # Enable CORS for React frontend
 # Initialize analyzer with API key
 API_KEY = os.getenv("GEMINI_API_KEY")
 if not API_KEY:
-    print("⚠️  Please set GEMINI_API_KEY environment variable")
-    exit(1)
+    print("⚠️  Warning: GEMINI_API_KEY not set")
+    print("    The system will use fallback analysis mode")
+    API_KEY = "placeholder-key-for-fallback-mode"
 
 analyzer = NeuralEmbeddingAnalyzer(api_key=API_KEY)
 
@@ -137,11 +138,16 @@ def denoise_embeddings():
         # Convert cleaned embeddings to chart format
         cleaned_chart_data = []
         for i, embedding in enumerate(cleaned_embeddings[:100]):
+            # Handle cases where PCA reduces to very few dimensions
+            dim1 = float(embedding[0]) if len(embedding) > 0 else 0
+            dim2 = float(embedding[1]) if len(embedding) > 1 else 0
+            dim3 = float(embedding[2]) if len(embedding) > 2 else 0
+            
             cleaned_chart_data.append({
                 'id': i,
-                'dim1': float(embedding[0]),
-                'dim2': float(embedding[1]),
-                'dim3': float(embedding[2]) if len(embedding) > 2 else 0,
+                'dim1': dim1,
+                'dim2': dim2,
+                'dim3': dim3,
                 'quality': 'good',  # All cleaned embeddings are good quality
                 'confidence': float(np.random.random() * 0.2 + 0.8)  # High confidence
             })
